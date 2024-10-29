@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-zaf_s^vwepyb+5_9toay5bt+^qbtmg$1z_$9s&-#h9h5x41qf9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'tenant_schemas.middleware.TenantMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,10 +76,19 @@ WSGI_APPLICATION = 'multitenant.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'tenant_schemas.postgresql_backend',
+        'NAME': 'multitenant',
+        'USER': 'multitenant',
+        'PASSWORD': 'multitenant',
+        'HOST': 'localhost',
+        'PORT': 5432,
+        'CHARSET': 'UTF8'
     }
 }
+
+DATABASE_ROUTERS = (
+    'tenant_schemas.routers.TenantSyncRouter',
+)
 
 
 # Password validation
